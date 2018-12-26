@@ -6,6 +6,10 @@
 #include <opencv.hpp>
 #include "resource.h"
 
+bool check_user_present(cv::Mat img){
+    return false;
+}
+
 void lockscreen(HWND hwnd){
     // system("rundll32.exe user32.dll,LockWorkStation");
     ShowWindow(hwnd, SW_SHOWMAXIMIZED);  //显示窗体的API 传入需要显示的窗体句柄和显示方式
@@ -47,6 +51,7 @@ HWND initlockwindow(HINSTANCE hInstance){
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, PTSTR szCmdLine, int iCmdShow){  //Win32 Api 主程序函数入口
     HWND hwnd;                                                      //定义句柄用来保存成功创建窗口后返回的句柄
     MSG msg;                                                        //定义消息结构体变量
+    bool is_lock = false;
 
     hwnd = initlockwindow(hInstance);
     //APIWS_OVERLAPPEDWINDOW为 Window Styles  //详见参数注释2
@@ -56,28 +61,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, PTSTR szCmdLine,
     // cv::namedWindow("pic");
     // imshow("pic", img);
     // cv::waitKey(1000);
-
-    lockscreen(hwnd);
-    Sleep(10000);
-    unlockscreen(hwnd);
-    Sleep(5000);
-    lockscreen(hwnd);
-    Sleep(5000);
-    unlockscreen(hwnd);
     
     cv::Mat img;
     cv::VideoCapture cap(0);
     while(1){
+        Sleep(100);
         cap >> img;
         
         if(img.empty()){
-
+            continue;
         }
-        else{
-            imshow("pic", img);
-
+        
+        if(check_user_present(img) == false && is_lock == false){
+            lockscreen(hwnd);
+            is_lock = true;
         }
-        cv::waitKey(30);
+        else if(check_user_present(img) == true && is_lock == true){
+            unlockscreen(hwnd);
+            is_lock = false;
+        }
     }
     
     while (GetMessage(&msg, NULL, 0, 0)){//进入消息循环
