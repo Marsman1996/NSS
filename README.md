@@ -14,8 +14,9 @@ Homework of Network and System Security.
 ### 拍照实现
 调用OpenCV库函数实现
 
-### 
-
+### 人脸识别实现
+调用Seetaface实现
 
 ## REFERENCE
 [blog: OpenCV安装教程](https://blog.csdn.net/mars_xiaolei/article/details/78759041)  
+[blog: Seetaface安装教程](https://blog.csdn.net/u014349384/article/details/76408114)
