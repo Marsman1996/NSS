@@ -12,11 +12,11 @@ Homework of Network and System Security.
 <!-- (锁屏界面属于system用户) -->
 
 ### 拍照实现
-调用OpenCV库函数实现
+调用[OpenCV 2.4](https://github.com/opencv/opencv)实现
 
 ### 人脸识别实现
-调用Seetaface实现
+调用[SeetaFaceEngine](https://github.com/seetaface/SeetaFaceEngine)实现
 
-## REFERENCE
+## References
 [blog: OpenCV安装教程](https://blog.csdn.net/mars_xiaolei/article/details/78759041)  
 [blog: Seetaface安装教程](https://blog.csdn.net/u014349384/article/details/76408114)
