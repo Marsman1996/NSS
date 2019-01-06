@@ -8,19 +8,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-
-
+#include <string>
+#include <sstream>
+#include <atlstr.h>
+using namespace std;
 float check_user_present(cv::Mat img);
+bool is_lock = false;
 
-void lockscreen(HWND hwnd){
-    // system("rundll32.exe user32.dll,LockWorkStation");
-    ShowWindow(hwnd, SW_SHOWMAXIMIZED);  //
-    BlockInput(true);  //This only works under "Run as Admin" mode
+void lockscreen(){
+	FILE *fp;
+	ostringstream buffer;
+	
+	cv::Mat img;
+	cv::VideoCapture cap(0);
+	cap >> img;
+	if (img.empty()){
+		return;
+	}
+	float res = check_user_present(img);
+	/*buffer << res;
+	string str = buffer.str() + ".jpg";
+	buffer.str("");
+	cv::imwrite(str, img);*/
+	if ( res < 0.6){
+		is_lock = true;
+		fp = fopen("d:\\myfile.txt", "w");
+
+		fprintf(fp, "%f\n", res);
+		fclose(fp);
+		system("rundll32.exe user32.dll,LockWorkStation");
+		//ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+		//BlockInput(true);  //This only works under "Run as Admin" mode
+	}
+    
 }
 
-void unlockscreen(HWND hwnd){
-    BlockInput(false);
-    ShowWindow(hwnd, SW_HIDE);
+void unlockscreen(){
+	FILE *fp;
+	ostringstream buffer;
+	cv::Mat img;
+	cv::VideoCapture cap(0);
+	while (is_lock == true){
+		cap >> img;
+		if (img.empty()){
+			return;
+		}
+		float res = check_user_present(img);
+		/*buffer << res;
+		string str = buffer.str() + ".jpg";
+		buffer.str("");
+		cv::imwrite(str, img);*/
+		if (res > 0.6){
+			is_lock = false;
+
+			fp = fopen("d:\\myfile.txt", "w");
+
+			fprintf(fp, "%f\n", res);
+			fclose(fp);
+			
+			//BlockInput(false);
+			//ShowWindow(hwnd, SW_HIDE);
+		}
+	}
+    
+	
 }
 
 LRESULT CALLBACK WinSunProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);  //
@@ -51,14 +102,10 @@ HWND initlockwindow(HINSTANCE hInstance){
 }
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPTSTR szCmdLine, int iCmdShow){  //
-    HWND hwnd;                                                      //
-    MSG msg;                                                        //
-    bool is_lock = false;
+                                                        //
+    
 
-	FILE *fp;
-	
-
-    hwnd = initlockwindow(hInstance);
+    //hwnd = initlockwindow(hInstance);
     //APIWS_OVERLAPPEDWINDOWΪ Window Styles  //
     // UpdateWindow(hwnd);//
 
@@ -66,45 +113,25 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPTSTR szCmdLi
     // cv::namedWindow("pic");
     // imshow("pic", img);
     // cv::waitKey(1000);
-    
-    cv::Mat img;
-    cv::VideoCapture cap(0);
-    while(1){
-		if (is_lock == true)
-			Sleep(100);
-		else
-			Sleep(10000);
-        cap >> img;
-        
-        if(img.empty()){
-            continue;
-        }
-        
-		float res = check_user_present(img);
 
-		if (is_lock == false && res < 0.6){
-            lockscreen(hwnd);
-            is_lock = true;
-			fp = fopen("d:\\myfile.txt", "a+");
-			fprintf(fp, "%f\n", res);
-			fclose(fp);
-        }
-		else if (is_lock == true && res > 0.6){
-            unlockscreen(hwnd);
-            is_lock = false;
-			Sleep(10000);
-			fp = fopen("d:\\myfile.txt", "a+");
-			fprintf(fp, "%f\n", res);
-			fclose(fp);
-			
-        }
+    while(1){
+		if (is_lock == true){
+			//Sleep(100);
+			unlockscreen();
+			Sleep(20000);
+		}
+		else{
+			Sleep(20000);
+			lockscreen();
+		}
+
     }
-    
+	/*
     while (GetMessage(&msg, NULL, 0, 0)){//
         TranslateMessage(&msg); //
         DispatchMessage(&msg); //
-    }
-	fclose(fp);
+    }*/
+
     return 0;
 }
 LRESULT CALLBACK WinSunProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){//
