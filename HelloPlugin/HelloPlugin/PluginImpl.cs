@@ -62,7 +62,7 @@ namespace pGina.Plugin.HelloPlugin
                 return new BooleanResult() { Success = true };
             }
             else{
-                return new BooleanResult() { Success = false, Message = line };
+                return new BooleanResult() { Success = false, Message = "Too Low Similarity !!" };
             }
             
         }
