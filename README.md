@@ -6,18 +6,14 @@ Homework of Network and System Security.
 
 ## 实现
 ### 锁定模块实现
-调用[ *LockWorkStation* ]锁定工作站 
-
-### 拍照实现
-调用[OpenCV 2.4](https://github.com/opencv/opencv)实现
+调用[*LockWorkStation()*](https://docs.microsoft.com/zh-cn/windows/desktop/api/winuser/nf-winuser-lockworkstation)锁定工作站  
+借助[Pgina](https://github.com/pgina/pgina)编写插件实现解锁
 
 ### 人脸识别实现
-调用[SeetaFaceEngine](https://github.com/seetaface/SeetaFaceEngine)实现
-
-### 登录解锁模块插件实现
-借助[Pgina](https://github.com/pgina/pgina)编写插件实现
+调用[OpenCV 2.4](https://github.com/opencv/opencv)API拍摄照片  
+调用[SeetaFaceEngine](https://github.com/seetaface/SeetaFaceEngine)实现对人脸的识别
 
 ## References
 [blog: OpenCV安装教程](https://blog.csdn.net/mars_xiaolei/article/details/78759041)  
-[blog: Seetaface安装教程](https://blog.csdn.net/u014349384/article/details/76408114)
-[pgina教程](https://http://pgina.org/)
+[blog: Seetaface安装教程](https://blog.csdn.net/u014349384/article/details/76408114)  
+[pgina教程](http://pgina.org/)
